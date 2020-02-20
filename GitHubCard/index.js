@@ -7,15 +7,24 @@ const entry = document.querySelector('.cards');
 
 axios.get('https://api.github.com/users/SarahMLawrence')
 
-.then((response) => {
-  let newUserCard = userCard(response.data);
+  .then((response) => {
+    let newUserCard = userCard(response.data);
 
-  entry.appendChild(newUserCard);
-})
+    entry.appendChild(newUserCard);
 
-.catch((err) => {
-  console.log(err)
-})
+    const calendarDiv = document.createElement('div');
+    entry.appendChild(calendarDiv);
+    calendarDiv.classList.add("calendar");
+
+    new GitHubCalendar(".calendar", "SarahMLawrence");
+  })
+
+  .catch((err) => {
+    console.log(err)
+  })
+
+
+
 
 
 /* Step 2: Inspect and study the data coming back, this is YOUR 
@@ -38,11 +47,6 @@ axios.get('https://api.github.com/users/SarahMLawrence')
           Using that array, iterate over it, requesting data for each user, creating a new card for each
           user, and adding that card to the DOM.
 */
-
-const followersArray = [];
-followersArray = [tetondan, dustinmyers, justsml, luishrd, bigknell, AustinJHealy];
-
-
 
 
 
@@ -84,54 +88,75 @@ function userCard(data) {
   const newInfo = document.createElement("div"); //parent
   newInfo.classList.add("card-info");
 
-    const name = document.createElement("h3");
-    name.classList.add("name");
-    name.textContent = data.name;
+  const name = document.createElement("h3");
+  name.classList.add("name");
+  name.textContent = data.name;
 
-    //cant get username to show up??
-    const username = document.createElement("p");
-    username.classList.add("username");
-    username.textContent = data.username;
+  //cant get username to show up??
+  const username = document.createElement("p");
+  username.classList.add("username");
+  username.textContent = data.username;
 
-    const location = document.createElement("p");
-    location.textContent = `Location: ${data.location}`;
+  const location = document.createElement("p");
+  location.textContent = `Location: ${data.location}`;
 
-    
-    const newProfile = document.createElement("p");//parent
-      newProfile.textContent = "Profile: ";
 
-      const newAddress = document.createElement('a');
-      newAddress.setAttribute("href", data.html_url);
-      newAddress.textContent = data.html_url;
-    
-    const followers = document.createElement("p");
-    followers.textContent = `Followers: ${data.followers}`;
-    
-    const following = document.createElement("p");
-    following.textContent = `Following: ${data.following}`;
-    
-    const bio = document.createElement("p");
-    bio.textContent = `Bio: ${data.bio}`;
+  const newProfile = document.createElement("p");//parent
+  newProfile.textContent = "Profile: ";
 
-    
-    newCard.appendChild(newImage);
-    newCard.appendChild(newInfo);
-    newInfo.appendChild(name);
-    newInfo.appendChild(username);
-    newInfo.appendChild(location);
-    newInfo.appendChild(newProfile);
-    newProfile.appendChild(newAddress);
-    newInfo.appendChild(followers);
-    newInfo.appendChild(following);
-    newInfo.appendChild(bio);
-    
+  const newAddress = document.createElement('a');
+  newAddress.setAttribute("href", data.html_url);
+  newAddress.textContent = data.html_url;
+
+  const followers = document.createElement("p");
+  followers.textContent = `Followers: ${data.followers}`;
+
+  const following = document.createElement("p");
+  following.textContent = `Following: ${data.following}`;
+
+  const bio = document.createElement("p");
+  bio.textContent = `Bio: ${data.bio}`;
+
+
+
+  newCard.appendChild(newImage);
+  newCard.appendChild(newInfo);
+  newInfo.appendChild(name);
+  newInfo.appendChild(username);
+  newInfo.appendChild(location);
+  newInfo.appendChild(newProfile);
+  newProfile.appendChild(newAddress);
+  newInfo.appendChild(followers);
+  newInfo.appendChild(following);
+  newInfo.appendChild(bio);
+  // newCard.appendChild(calendar);
+
 
   return newCard;
 
-  
+
 
 }
 
 
+let followersArray = [];
+followersArray = ["AustinJHealy", "dustinmyers", "justsml", "luishrd", "bigknell"];
+//followersArray = tetondan, dustinmyers, justsml, luishrd, bigknell, AustinJHealy;
+
+followersArray.forEach(following =>
+  axios.get(`https://api.github.com/users/${following}`)
+
+    .then((response) => {
+
+      entry.appendChild(userCard(response.data));
+
+    })
+
+    .catch((err) => {
+      console.log(err)
+    })
+
+
+)
 
 
