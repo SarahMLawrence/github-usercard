@@ -3,6 +3,21 @@
            https://api.github.com/users/<your name>
 */
 
+const entry = document.querySelector('.cards');
+
+axios.get('https://api.github.com/users/SarahMLawrence')
+
+.then((response) => {
+  let newUserCard = userCard(response.data);
+
+  entry.appendChild(newUserCard);
+})
+
+.catch((err) => {
+  console.log(err)
+})
+
+
 /* Step 2: Inspect and study the data coming back, this is YOUR 
    github info! You will need to understand the structure of this 
    data in order to use it to build your component function 
@@ -25,10 +40,14 @@
 */
 
 const followersArray = [];
+followersArray = [tetondan, dustinmyers, justsml, luishrd, bigknell, AustinJHealy];
+
+
+
+
 
 /* Step 3: Create a function that accepts a single object as its only argument,
           Using DOM methods and properties, create a component that will return the following DOM element:
-
 <div class="card">
   <img src={image url of user} />
   <div class="card-info">
@@ -53,3 +72,66 @@ const followersArray = [];
   luishrd
   bigknell
 */
+
+function userCard(data) {
+
+  const newCard = document.createElement("div");//parent
+  newCard.classList.add("card");
+
+  const newImage = document.createElement("img");
+  newImage.src = data.avatar_url;
+
+  const newInfo = document.createElement("div"); //parent
+  newInfo.classList.add("card-info");
+
+    const name = document.createElement("h3");
+    name.classList.add("name");
+    name.textContent = data.name;
+
+    //cant get username to show up??
+    const username = document.createElement("p");
+    username.classList.add("username");
+    username.textContent = data.username;
+
+    const location = document.createElement("p");
+    location.textContent = `Location: ${data.location}`;
+
+    
+    const newProfile = document.createElement("p");//parent
+      newProfile.textContent = "Profile: ";
+
+      const newAddress = document.createElement('a');
+      newAddress.setAttribute("href", data.html_url);
+      newAddress.textContent = data.html_url;
+    
+    const followers = document.createElement("p");
+    followers.textContent = `Followers: ${data.followers}`;
+    
+    const following = document.createElement("p");
+    following.textContent = `Following: ${data.following}`;
+    
+    const bio = document.createElement("p");
+    bio.textContent = `Bio: ${data.bio}`;
+
+    
+    newCard.appendChild(newImage);
+    newCard.appendChild(newInfo);
+    newInfo.appendChild(name);
+    newInfo.appendChild(username);
+    newInfo.appendChild(location);
+    newInfo.appendChild(newProfile);
+    newProfile.appendChild(newAddress);
+    newInfo.appendChild(followers);
+    newInfo.appendChild(following);
+    newInfo.appendChild(bio);
+    
+
+  return newCard;
+
+  
+
+}
+
+
+
+
